@@ -326,22 +326,6 @@ xTaskCreate(audioSynthesisTask, "AudioSynth", 4096, nullptr, 5, nullptr);
 
 ## Performance Optimization
 
-### Memory Management for MP3 Streaming
-```cpp
-// MP3 streaming uses minimal memory
-// Traditional: Load 3MB MP3 → 15MB PCM → I2S
-// Streaming: 2KB chunks → 8KB PCM → Immediate I2S output
-
-// Memory usage comparison:
-// Traditional approach: 15MB+ RAM usage
-// Streaming approach: ~20KB constant RAM usage
-
-// Benefits:
-// - Can play files larger than available RAM
-// - Constant low memory usage
-// - Real-time processing with minimal latency
-```
-
 ### Buffer Size Guidelines
 - **Low Latency Audio**: 64-256 samples per buffer
 - **Standard Audio Playback**: 512-1024 samples per buffer  
@@ -408,31 +392,6 @@ Upload SPIFFS using PlatformIO: `pio run -t uploadfs`
 6. **Hardware Flexible**: Works with various I2S audio hardware (MAX98357A, PCM5102A, etc.)
 7. **Production Tested**: Used in robotics and IoT projects requiring reliable audio output
 8. **Comprehensive Examples**: Complete working demonstrations for all features
-
-## Streaming MP3 Architecture
-
-### Memory Efficiency Breakthrough
-```
-Traditional Approach:        Streaming Approach:
-┌─────────────────┐         ┌─────────────────┐
-│  Load 3MB MP3   │         │ Read 2KB chunk  │
-│  into RAM       │   →     │ from SPIFFS     │
-└─────────────────┘         └─────────────────┘
-         ↓                           ↓
-┌─────────────────┐         ┌─────────────────┐
-│ Decode to 15MB  │         │ Decode to 8KB   │
-│ PCM in RAM      │   →     │ PCM immediately │
-└─────────────────┘         └─────────────────┘
-         ↓                           ↓
-┌─────────────────┐         ┌─────────────────┐
-│ Stream to I2S   │         │ Stream to I2S   │
-│                 │         │ (Real-time)     │
-└─────────────────┘         └─────────────────┘
-
-RAM Usage: 15MB+            RAM Usage: ~20KB
-File Limit: RAM size        File Limit: SPIFFS size
-Latency: High               Latency: ~100ms
-```
 
 ## Compatibility
 

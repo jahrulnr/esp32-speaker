@@ -58,7 +58,7 @@ esp_err_t I2SSpeaker::init(uint32_t sampleRate, i2s_data_bit_width_t bitsPerSamp
 esp_err_t I2SSpeaker::configureChannel() {
     // Create I2S TX channel
     i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(_portNum, I2S_ROLE_MASTER);
-    // chan_cfg.auto_clear = true; // Auto clear DMA buffer when TX underflow
+    chan_cfg.auto_clear = true; // Auto clear DMA buffer when TX underflow
     
     esp_err_t ret = i2s_new_channel(&chan_cfg, &_txHandle, nullptr);
     if (ret != ESP_OK) {

@@ -166,6 +166,13 @@ public:
     size_t generateSineWave(int frequency, int duration, float amplitude, 
                            int16_t* buffer, size_t bufferSize);
 
+    /**
+     * Get number of channels as integer
+     * 
+     * @return Number of channels (1 or 2)
+     */
+    size_t getChannelCount() const;
+
 private:
     static const char* TAG;
 
@@ -201,11 +208,4 @@ private:
      * @return Bytes per sample
      */
     size_t getBytesPerSample() const;
-
-    /**
-     * Get number of channels as integer
-     * 
-     * @return Number of channels (1 or 2)
-     */
-    size_t getChannelCount() const;
 };

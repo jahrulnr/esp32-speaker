@@ -141,6 +141,7 @@ bool AudioSamples::playBeep(int frequency, int duration, float volume, WaveformT
     }
 
     free(buffer);
+    _speaker->clear();
     return result;
 }
 
@@ -204,6 +205,7 @@ bool AudioSamples::playDTMF(char digit, int duration, float volume) {
     }
 
     free(buffer);
+    _speaker->clear();
     return result;
 }
 
@@ -248,6 +250,7 @@ bool AudioSamples::playWhiteNoise(int duration, float volume) {
     result = (samplesWritten > 0);
 
     free(buffer);
+    _speaker->clear();
     return result;
 }
 
@@ -306,6 +309,7 @@ bool AudioSamples::playFrequencySweep(int startFreq, int endFreq, int duration, 
     result = (samplesWritten > 0);
 
     free(buffer);
+    _speaker->clear();
     return result;
 }
 

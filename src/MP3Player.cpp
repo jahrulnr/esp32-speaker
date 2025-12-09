@@ -77,6 +77,7 @@ bool MP3Player::playFileWithProgress(const String& filePath, float volume,
     
     _playing = false;
     _progressCallback = nullptr;
+    _speaker->clear();
     
     return success;
 }

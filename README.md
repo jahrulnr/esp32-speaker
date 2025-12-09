@@ -20,6 +20,7 @@ Perfect for robotics projects, IoT devices, audio playback systems, notification
 - **Hardware Abstraction**: Clean API that isolates your application from I2S complexity
 - **Memory Efficient**: Streaming architecture for playing large audio files with minimal RAM
 - **Volume Control**: Real-time volume adjustment during playback
+- **Buffer Management**: Manual buffer clearing and playing state tracking for clean audio transitions
 
 ## Hardware Compatibility
 
@@ -154,6 +155,7 @@ I2SSpeaker(gpio_num_t dataPin, gpio_num_t clockPin, gpio_num_t wordSelectPin, i2
 - `uint32_t getSampleRate() const`: Get sample rate
 - `i2s_data_bit_width_t getBitsPerSample() const`: Get bits per sample
 - `i2s_slot_mode_t getChannelMode() const`: Get channel mode
+- `esp_err_t clear()`: Clear speaker buffer with silence
 
 ### MP3Player Class
 
@@ -334,9 +336,6 @@ xTaskCreate(audioSynthesisTask, "AudioSynth", 4096, nullptr, 5, nullptr);
 
 ### Real-time Considerations
 ```cpp
-// Preload DMA to reduce startup latency
-speaker->preloadDMA();
-
 // Use appropriate task priorities for audio threads
 xTaskCreatePinnedToCore(audioTask, "Audio", 4096, nullptr, 
                        configMAX_PRIORITIES - 1, nullptr, 1);
@@ -423,6 +422,7 @@ Upload SPIFFS using PlatformIO: `pio run -t uploadfs`
 - Verify bit depth configuration (16-bit recommended for most cases)
 - Ensure adequate power supply for amplifier
 - Check for buffer underruns in high CPU load scenarios
+- Use `speaker->clear()` between audio segments to prevent bleed-through
 
 **Build Errors:**
 - Ensure ESP-IDF v5.0+ and Arduino ESP32 v2.0+ (includes Helix MP3 decoder)

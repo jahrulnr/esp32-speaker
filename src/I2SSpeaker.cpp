@@ -58,7 +58,7 @@ esp_err_t I2SSpeaker::init(uint32_t sampleRate, i2s_data_bit_width_t bitsPerSamp
 esp_err_t I2SSpeaker::configureChannel() {
     // Create I2S TX channel
     i2s_chan_config_t chan_cfg = I2S_CHANNEL_DEFAULT_CONFIG(_portNum, I2S_ROLE_MASTER);
-    chan_cfg.auto_clear = true; // Auto clear DMA buffer when TX underflow
+    chan_cfg.auto_clear = false; // Auto clear DMA buffer when TX underflow
     
     esp_err_t ret = i2s_new_channel(&chan_cfg, &_txHandle, nullptr);
     if (ret != ESP_OK) {
@@ -283,32 +283,6 @@ i2s_slot_mode_t I2SSpeaker::getChannelMode() const {
     return _channelMode;
 }
 
-esp_err_t I2SSpeaker::preloadDMA() {
-    if (!_initialized || !_active) {
-        return ESP_ERR_INVALID_STATE;
-    }
-
-    // Create a buffer of silence to preload DMA
-    size_t bufferSize = calculateBufferSize(100); // 100ms of silence
-    uint8_t* silenceBuffer = (uint8_t*)calloc(bufferSize, 1);
-    
-    if (!silenceBuffer) {
-        ESP_LOGE(TAG, "Failed to allocate silence buffer for DMA preload");
-        return ESP_ERR_NO_MEM;
-    }
-
-    size_t bytesWritten;
-    esp_err_t ret = writeAudioData(silenceBuffer, bufferSize, &bytesWritten, 50);
-    
-    free(silenceBuffer);
-    
-    if (ret == ESP_OK) {
-        ESP_LOGI(TAG, "DMA buffers preloaded with %d bytes", bytesWritten);
-    }
-    
-    return ret;
-}
-
 size_t I2SSpeaker::calculateBufferSize(uint32_t durationMs) const {
     size_t samplesPerMs = _sampleRate / 1000;
     size_t totalSamples = samplesPerMs * durationMs;
@@ -340,4 +314,25 @@ size_t I2SSpeaker::getChannelCount() const {
         default:
             return 2;
     }
+}
+
+esp_err_t I2SSpeaker::clear() {
+    if (!_initialized || !_active) {
+        return ESP_ERR_INVALID_STATE;
+    }
+
+    // Create a buffer of silence
+    size_t bufferSize = calculateBufferSize(300); // silence duration on ms
+    uint8_t* silenceBuffer = (uint8_t*)calloc(bufferSize, 1);
+    
+    if (!silenceBuffer) {
+        ESP_LOGE(TAG, "Failed to allocate silence buffer");
+        return ESP_ERR_NO_MEM;
+    }
+
+    size_t bytesWritten;
+    esp_err_t ret = writeAudioData(silenceBuffer, bufferSize, &bytesWritten, 50);
+    
+    free(silenceBuffer);
+    return ret;
 }

@@ -106,6 +106,7 @@ void demonstrateRawAudio() {
   Serial.println("Writing raw audio data...");
   int samplesWritten = speaker->writeSamples(audioBuffer, bufferSize * 2, 1000);
   Serial.printf("Wrote %d samples\n", samplesWritten);
+  speaker->clear();
 }
 
 void setup() {

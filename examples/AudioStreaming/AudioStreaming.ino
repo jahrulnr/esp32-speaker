@@ -139,6 +139,7 @@ void streamAudio(float frequency, float amplitude, int durationMs) {
   
   Serial.printf("Streaming completed: %d samples in %ldms\n", 
                samplesGenerated, endTime - startTime);
+  speaker->clear();
 }
 
 void demonstrateFrequencySweep() {
@@ -192,6 +193,7 @@ void demonstrateFrequencySweep() {
   }
   
   isStreaming = false;
+  speaker->clear();
   Serial.println("Frequency sweep completed");
 }
 
@@ -226,7 +228,7 @@ void demonstrateStereoEffect() {
   size_t samplesGenerated = 0;
   
   while (samplesGenerated < totalSamples && isStreaming) {
-    size_t samplesToGenerate = min(STREAM_BUFFER_SIZE, totalSamples - samplesGenerated);
+    size_t samplesToGenerate = _min(STREAM_BUFFER_SIZE, totalSamples - samplesGenerated);
     
     for (size_t i = 0; i < samplesToGenerate; i++) {
       // Calculate pan position (oscillates between left and right)
@@ -261,6 +263,7 @@ void demonstrateStereoEffect() {
   
   isStreaming = false;
   Serial.println("Stereo panning effect completed");
+  speaker->clear();
 }
 
 void setup() {

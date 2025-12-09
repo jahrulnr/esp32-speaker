@@ -139,13 +139,6 @@ public:
     i2s_slot_mode_t getChannelMode() const;
 
     /**
-     * Preload DMA buffers to reduce initial latency
-     * 
-     * @return ESP_OK if successful, error code otherwise
-     */
-    esp_err_t preloadDMA();
-
-    /**
      * Calculate the optimal buffer size for given duration
      * 
      * @param durationMs Duration in milliseconds
@@ -172,6 +165,13 @@ public:
      * @return Number of channels (1 or 2)
      */
     size_t getChannelCount() const;
+
+    /**
+     * Clear Speaker buffer
+     * 
+     * @return ESP_OK if successful, error code otherwise
+     */
+    esp_err_t clear();
 
 private:
     static const char* TAG;

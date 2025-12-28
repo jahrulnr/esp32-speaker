@@ -151,9 +151,10 @@ esp_err_t I2SSpeaker::writeAudioData(const void* buffer, size_t bufferSize, size
         return ESP_ERR_INVALID_ARG;
     }
 		
-		_playing = true;
+    _playing = true;
+    if (timeoutMs != portMAX_DELAY) timeoutMs = pdMS_TO_TICKS(timeoutMs);
     esp_err_t ret = i2s_channel_write(_txHandle, buffer, bufferSize, bytesWritten, 
-                                     pdMS_TO_TICKS(timeoutMs));
+                                     timeoutMs);
     
     if (ret != ESP_OK && ret != ESP_ERR_TIMEOUT) {
         ESP_LOGE(TAG, "Failed to write audio data: %s", esp_err_to_name(ret));

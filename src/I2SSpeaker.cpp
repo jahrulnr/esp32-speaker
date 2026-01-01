@@ -150,7 +150,7 @@ esp_err_t I2SSpeaker::writeAudioData(const void* buffer, size_t bufferSize, size
         ESP_LOGE(TAG, "Invalid buffer or size");
         return ESP_ERR_INVALID_ARG;
     }
-		
+        
     _playing = true;
     if (timeoutMs != portMAX_DELAY) timeoutMs = pdMS_TO_TICKS(timeoutMs);
     esp_err_t ret = i2s_channel_write(_txHandle, buffer, bufferSize, bytesWritten, 
@@ -160,7 +160,7 @@ esp_err_t I2SSpeaker::writeAudioData(const void* buffer, size_t bufferSize, size
         ESP_LOGE(TAG, "Failed to write audio data: %s", esp_err_to_name(ret));
     }
 
-		_playing = false;
+    _playing = false;
     return ret;
 }
 
@@ -269,7 +269,7 @@ bool I2SSpeaker::isActive() const {
 }
 
 bool I2SSpeaker::isPlaying() const {
-		return _playing;
+        return _playing;
 }
 
 uint32_t I2SSpeaker::getSampleRate() const {

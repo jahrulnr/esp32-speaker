@@ -323,7 +323,7 @@ esp_err_t I2SSpeaker::clear() {
     }
 
     // Create a buffer of silence
-    size_t bufferSize = calculateBufferSize(300); // silence duration on ms
+    size_t bufferSize = calculateBufferSize(1000); // silence duration on ms
     uint8_t* silenceBuffer = (uint8_t*)calloc(bufferSize, 1);
     
     if (!silenceBuffer) {
@@ -332,7 +332,7 @@ esp_err_t I2SSpeaker::clear() {
     }
 
     size_t bytesWritten;
-    esp_err_t ret = writeAudioData(silenceBuffer, bufferSize, &bytesWritten, 50);
+    esp_err_t ret = writeAudioData(silenceBuffer, bufferSize, &bytesWritten, portMAX_DELAY);
     
     free(silenceBuffer);
     return ret;
